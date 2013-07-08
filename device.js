@@ -1,34 +1,49 @@
 if(device) var _device = device;
 var device = {};
 (function(d){
-	d.version = '0.0.2';
+	d.version = '0.0.3';
 	var ua = navigator.userAgent.toLowerCase();
 	var app = navigator.appVersion.toLowerCase();
+
 	// /////////////////////////////////////////////////////////////////////////
 	// スマホ
 	// /////////////////////////////////////////////////////////////////////////
-	// =========================================================================
-	// iPhone & iPad の設定
-	// =========================================================================
-	if(ua.indexOf('iphone') > 0 || ua.indexOf('ipad') > 0){
-		d.name = ua.indexOf('iphone') > 0 ? 'iPhone': 'iPad';
-		d.os = 'iOS';
-		console.log(ua);
-		ua.replace(/os ([0-9,_]*)/,function(data,hit){
-			d.os_version = {};
-			d.os_version.all = hit;
-			d.os_version.place = hit.split('_');
+	if(ua.indexOf('iphone') > 0 || ua.indexOf('ipad') > 0 || ua.indexOf('android') > 0){
+		// =====================================================================
+		// iPhone & iPad の設定
+		// =====================================================================
+		if(ua.indexOf('iphone') > 0 || ua.indexOf('ipad') > 0){
+			d.name = ua.indexOf('iphone') > 0 ? 'iPhone': 'iPad';
+			d.os = 'iOS';
+			ua.replace(/os ([0-9,_]*)/,function(data,hit){
+				d.os_version = {};
+				d.os_version.all = hit;
+				d.os_version.place = hit.split('_');
+			});
+		}
+		// =====================================================================
+		// Android の設定
+		// =====================================================================
+		if(ua.indexOf('android') > 0){
+			d.os = 'Android';
+			ua.replace(/android ([0-9,¥.]*)/,function(data,hit){
+				d.os_version = {};
+				d.os_version.all = hit;
+				d.os_version.place = hit.split('.');
+			});
+		}
+		// =====================================================================
+		// スマホ共通設定
+		// =====================================================================
+		// 傾き
+		window.addEventListener('devicemotion',function devicemotion_func(e){
+			d.devicemotion = true;
+			window.removeEventListener('devicemotion',devicemotion_func);
 		});
-	}
-	// =========================================================================
-	// Android の設定
-	// =========================================================================
-	else if(ua.indexOf('android') > 0){
-		d.os = 'Android';
-		ua.replace(/android ([0-9,¥.]*)/,function(data,hit){
-			d.os_version = {};
-			d.os_version.all = hit;
-			d.os_version.place = hit.split('.');
+		// 方位
+		window.addEventListener('deviceorientation',function devicemotion_func(e){
+			d.deviceorientation = true;
+			window.removeEventListener('deviceorientation',devicemotion_func);
 		});
 	}
 	// /////////////////////////////////////////////////////////////////////////
