@@ -1,7 +1,7 @@
 if(device) var _device = device;
 var device = {};
 (function(d){
-	d.version = '0.0.3';
+	d.version = '0.0.35';
 	var ua = navigator.userAgent.toLowerCase();
 	var app = navigator.appVersion.toLowerCase();
 
@@ -76,4 +76,25 @@ var device = {};
 			d.browser = 'Chrome';
 		}
 	}
+	// /////////////////////////////////////////////////////////////////////////
+	// メソッド
+	// /////////////////////////////////////////////////////////////////////////
+	dummy_data = {
+		iphone:{
+			name:'iPhone',
+			os:'iOS',
+			os_version:{
+				all:'6_0_0',
+				place:[6,0,0]
+			},
+			version:d.version
+		}
+	};
+	// =========================================================================
+	// dummy
+	// =========================================================================
+	device.dummy = function(target){
+		target = target.toLowerCase();
+		device = dummy_data[target];
+	};
 })(device);
