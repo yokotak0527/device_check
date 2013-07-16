@@ -1,7 +1,7 @@
 if(device) var _device = device;
 var device = {};
 (function(d){
-	d.version = '0.0.5';
+	d.version = '0.0.51';
 	var ua = navigator.userAgent.toLowerCase();
 	var app = navigator.appVersion.toLowerCase();
 
@@ -21,7 +21,6 @@ var device = {};
 				d.os_version.all = hit;
 				d.os_version.place = hit.split('_');
 			});
-			alert(d.os_version.all);
 			// chrome
 			if(ua.indexOf('crios') > 0){
 				d.browser = 'Chrome';
