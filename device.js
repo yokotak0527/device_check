@@ -1,10 +1,11 @@
 if(device) var _device = device;
 var device = {};
 (function(d){
-	d.version = '0.0.35';
+	d.version = '0.0.5';
 	var ua = navigator.userAgent.toLowerCase();
 	var app = navigator.appVersion.toLowerCase();
 
+	d.dummy_flg = false;
 	// /////////////////////////////////////////////////////////////////////////
 	// スマホ
 	// /////////////////////////////////////////////////////////////////////////
@@ -20,17 +21,49 @@ var device = {};
 				d.os_version.all = hit;
 				d.os_version.place = hit.split('_');
 			});
+			alert(d.os_version.all);
+			// chrome
+			if(ua.indexOf('crios') > 0){
+				d.browser = 'Chrome';
+				// ブラウザのバージョン
+				ua.replace(/crios\/[ ]?([0-9,¥.]*)/,function(data,hit){
+					d.browser_version = {};
+					d.browser_version.all = hit;
+					d.browser_version.place = hit.split('.');
+				});
+			}
 		}
 		// =====================================================================
 		// Android の設定
 		// =====================================================================
 		if(ua.indexOf('android') > 0){
 			d.os = 'Android';
-			ua.replace(/android ([0-9,¥.]*)/,function(data,hit){
-				d.os_version = {};
-				d.os_version.all = hit;
-				d.os_version.place = hit.split('.');
-			});
+			// Firefox
+			if(ua.indexOf('firefox') > 0){
+				d.browser = 'Firefox';
+				// ブラウザのバージョン
+				ua.replace(/firefox\/[ ]?([0-9,¥.]*)/,function(data,hit){
+					d.browser_version = {};
+					d.browser_version.all = hit;
+					d.browser_version.place = hit.split('.');
+				});
+			// Chrome
+			}else if(ua.indexOf('chrome') > 0){
+				d.browser = 'Chrome';
+				// ブラウザのバージョン
+				ua.replace(/chrome\/[ ]?([0-9,¥.]*)/,function(data,hit){
+					d.browser_version = {};
+					d.browser_version.all = hit;
+					d.browser_version.place = hit.split('.');
+				});
+			}else{
+				d.browser = 'default';
+				ua.replace(/android ([0-9,¥.]*)/,function(data,hit){
+					d.os_version = {};
+					d.os_version.all = hit;
+					d.os_version.place = hit.split('.');
+				});
+			}
 		}
 		// =====================================================================
 		// スマホ共通設定
@@ -51,29 +84,52 @@ var device = {};
 	// /////////////////////////////////////////////////////////////////////////
 	else{d.name = 'PC';
 		// =====================================================================
-		// IE の設定
+		// ブラウザ IE の設定
 		// =====================================================================
 		if(app.indexOf('msie') > 0){
 			d.browser = 'IE';
 			if(app.indexOf('trident') > 0) d.engine = 'Trident';
+			// ブラウザのバージョン
+			ua.replace(/msie ([0-9,¥.]*)/,function(data,hit){
+				d.browser_version = {};
+				d.browser_version.all = hit;
+				d.browser_version.place = hit.split('.');
+			});
 		}
 		// =====================================================================
-		// FireFox の設定
+		// ブラウザ FireFox の設定
 		// =====================================================================
 		else if(app.indexOf('firefox') > 0){
 			d.browser = 'FireFox';
+			// ブラウザのバージョン
+			ua.replace(/firefox\/[ ]?([0-9,¥.]*)/,function(data,hit){
+				d.browser_version = {};
+				d.browser_version.all = hit;
+				d.browser_version.place = hit.split('.');
+			});
 		}
 		// =====================================================================
-		// Chrome の設定
+		// ブラウザ Chrome の設定
 		// =====================================================================
 		else if(app.indexOf('chrome') > 0){
 			d.browser = 'Chrome';
+			// ブラウザのバージョン
+			ua.replace(/chrome\/[ ]?([0-9,¥.]*)/,function(data,hit){
+				d.browser_version = {};
+				d.browser_version.all = hit;
+				d.browser_version.place = hit.split('.');
+			});
 		}
 		// =====================================================================
-		// Safari の設定
+		// ブラウザ Safari の設定
 		// =====================================================================
 		else if(app.indexOf('safari') > 0){
-			d.browser = 'Chrome';
+			d.browser = 'Safari';
+			ua.replace(/version\/[ ]?([0-9,¥.]*)/,function(data,hit){
+				d.browser_version = {};
+				d.browser_version.all = hit;
+				d.browser_version.place = hit.split('.');
+			});
 		}
 	}
 	// /////////////////////////////////////////////////////////////////////////
@@ -81,6 +137,7 @@ var device = {};
 	// /////////////////////////////////////////////////////////////////////////
 	dummy_data = {
 		iphone:{
+			dummy_flg:true,
 			name:'iPhone',
 			os:'iOS',
 			os_version:{
