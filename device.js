@@ -1,21 +1,24 @@
 if(device) var _device = device;
 var device = {};
 (function(d){
-	d.version = '0.0.51';
-	var ua = navigator.userAgent.toLowerCase();
+	d.version = '0.0.55';
+	var ua  = navigator.userAgent.toLowerCase();
 	var app = navigator.appVersion.toLowerCase();
 
-	d.dummy_flg = false;
+	d.dummy_flg  = false;
+	d.smartphone = false;
+	d.pc         = false;
 	// /////////////////////////////////////////////////////////////////////////
 	// スマホ
 	// /////////////////////////////////////////////////////////////////////////
 	if(ua.indexOf('iphone') > 0 || ua.indexOf('ipad') > 0 || ua.indexOf('android') > 0){
+		d.smartphone = true;
 		// =====================================================================
 		// iPhone & iPad の設定
 		// =====================================================================
 		if(ua.indexOf('iphone') > 0 || ua.indexOf('ipad') > 0){
-			d.name = ua.indexOf('iphone') > 0 ? 'iPhone': 'iPad';
-			d.os = 'iOS';
+			d.name = ua.indexOf('iphone') > 0 ? 'iphone': 'ipad';
+			d.os = 'ios';
 			ua.replace(/os ([0-9,_]*)/,function(data,hit){
 				d.os_version = {};
 				d.os_version.all = hit;
@@ -23,7 +26,7 @@ var device = {};
 			});
 			// chrome
 			if(ua.indexOf('crios') > 0){
-				d.browser = 'Chrome';
+				d.browser = 'chrome';
 				// ブラウザのバージョン
 				ua.replace(/crios\/[ ]?([0-9,¥.]*)/,function(data,hit){
 					d.browser_version = {};
@@ -36,10 +39,10 @@ var device = {};
 		// Android の設定
 		// =====================================================================
 		if(ua.indexOf('android') > 0){
-			d.os = 'Android';
+			d.os = 'android';
 			// Firefox
 			if(ua.indexOf('firefox') > 0){
-				d.browser = 'Firefox';
+				d.browser = 'firefox';
 				// ブラウザのバージョン
 				ua.replace(/firefox\/[ ]?([0-9,¥.]*)/,function(data,hit){
 					d.browser_version = {};
@@ -48,7 +51,7 @@ var device = {};
 				});
 			// Chrome
 			}else if(ua.indexOf('chrome') > 0){
-				d.browser = 'Chrome';
+				d.browser = 'chrome';
 				// ブラウザのバージョン
 				ua.replace(/chrome\/[ ]?([0-9,¥.]*)/,function(data,hit){
 					d.browser_version = {};
@@ -81,13 +84,15 @@ var device = {};
 	// /////////////////////////////////////////////////////////////////////////
 	// PC の設定
 	// /////////////////////////////////////////////////////////////////////////
-	else{d.name = 'PC';
+	else{
+		d.name = 'pc';
+		d.pc   = true;
 		// =====================================================================
 		// ブラウザ IE の設定
 		// =====================================================================
 		if(app.indexOf('msie') > 0){
-			d.browser = 'IE';
-			if(app.indexOf('trident') > 0) d.engine = 'Trident';
+			d.browser = 'ie';
+			if(app.indexOf('trident') > 0) d.engine = 'trident';
 			// ブラウザのバージョン
 			ua.replace(/msie ([0-9,¥.]*)/,function(data,hit){
 				d.browser_version = {};
@@ -99,7 +104,7 @@ var device = {};
 		// ブラウザ FireFox の設定
 		// =====================================================================
 		else if(app.indexOf('firefox') > 0){
-			d.browser = 'FireFox';
+			d.browser = 'fireFox';
 			// ブラウザのバージョン
 			ua.replace(/firefox\/[ ]?([0-9,¥.]*)/,function(data,hit){
 				d.browser_version = {};
@@ -111,7 +116,7 @@ var device = {};
 		// ブラウザ Chrome の設定
 		// =====================================================================
 		else if(app.indexOf('chrome') > 0){
-			d.browser = 'Chrome';
+			d.browser = 'chrome';
 			// ブラウザのバージョン
 			ua.replace(/chrome\/[ ]?([0-9,¥.]*)/,function(data,hit){
 				d.browser_version = {};
@@ -123,13 +128,29 @@ var device = {};
 		// ブラウザ Safari の設定
 		// =====================================================================
 		else if(app.indexOf('safari') > 0){
-			d.browser = 'Safari';
+			d.browser = 'safari';
 			ua.replace(/version\/[ ]?([0-9,¥.]*)/,function(data,hit){
 				d.browser_version = {};
 				d.browser_version.all = hit;
 				d.browser_version.place = hit.split('.');
 			});
 		}
+		// =====================================================================
+		d.os = {};
+		// =====================================================================
+		// OS windowsの設定
+		// =====================================================================
+		if(ua.indexOf("win") != -1){
+			d.os.name = 'windows';
+			if(ua.match('windows nt 5.1')) d.os.version = 'xp';
+		}
+		// =====================================================================
+		// OS macの設定
+		// =====================================================================
+		else if(ua.indexOf("mac") != -1){
+			d.os.name = 'mac';
+		}
+		
 	}
 	// /////////////////////////////////////////////////////////////////////////
 	// メソッド
@@ -137,8 +158,8 @@ var device = {};
 	dummy_data = {
 		iphone:{
 			dummy_flg:true,
-			name:'iPhone',
-			os:'iOS',
+			name:'iphone',
+			os:'ios',
 			os_version:{
 				all:'6_0_0',
 				place:[6,0,0]
